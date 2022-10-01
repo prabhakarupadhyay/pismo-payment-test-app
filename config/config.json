@@ -1,0 +1,13 @@
+{
+    "test": {
+      "username": "root",
+      "password": "<password>",
+      "database": "test",
+      "host": "localhost",
+      "dialect": "mysql",
+      "define": {
+         "timestamps": false
+        }
+    }
+  }
+  
