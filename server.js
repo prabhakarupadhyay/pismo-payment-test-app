@@ -11,12 +11,14 @@ const sequelize = require('./models/connection');
 const tables = require('./models/index');
 
 // create tables if dont exist based on model
-sequelize.sync({force:true}) //{force:true}
+// use below object in sync function to drop and recreate tables
+// {force:true}
+sequelize.sync() 
 
 
 //Import routes
 const accounts = require("./routes/accounts");
-//const transactions = require("./routes/transactions");
+const transactions = require("./routes/transactions");
 
 
 //app middlewares
@@ -27,7 +29,7 @@ app.use(helmet());
 
 //app routes
 app.use("/accounts", accounts);
-//app.use("/api", transactions);
+app.use("/transactions", transactions);
 
 //
 app.use(function (req, res, next) {
