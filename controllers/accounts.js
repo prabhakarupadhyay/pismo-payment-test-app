@@ -2,6 +2,7 @@
 const { accounts } = require('../models');
 
 exports.getAccount = async (req, res) => {
+    // Get account info stored in account table using account ID
     return await accounts.findByPk(req.params.accounId,{attributes: [
         ['Account_ID','account_id'],
         ['Document_Number','document_number']
@@ -18,6 +19,7 @@ exports.getAccount = async (req, res) => {
 };
 
 exports.createAccount = async (req, res) => {
+        // Create account in accounts table
     return await accounts.create({
         Document_Number: req.body.document_number
     }).then(function (account) {

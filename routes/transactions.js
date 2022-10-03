@@ -7,6 +7,8 @@ const router = express.Router();
   } = require("../validators/checkRequestBody");
   const { runValidation } = require("../validators");
 
+  //import helper function
+  const decodeOperationsTypes= require("../helper-functions/operationsTypes");
 
 //Import accounts controllers
 const {
@@ -16,7 +18,8 @@ const {
 
 
 //accounts apis
-router.post("/", transactions, runValidation, createTransaction);
+router.post("/", transactions, runValidation, decodeOperationsTypes, createTransaction);
 router.get("/", getTransactions);
 
 module.exports = router;
+
