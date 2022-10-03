@@ -1,5 +1,7 @@
 'use strict';
 
+// This script loads all the models in sequelize during runtime of the application
+
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');

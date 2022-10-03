@@ -1,3 +1,5 @@
+// this script creates connection to mysql using sequelize
+
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'test';
 const config = require(`${__dirname}/../config/config.json`)[env];
