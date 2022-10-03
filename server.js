@@ -10,13 +10,15 @@ require("dotenv").config();
 const sequelize = require('./models/connection');
 const tables = require('./models/index');
 
-// create tables if dont exist based on model
-sequelize.sync({force:true}) //{force:true}
+// create tables if dont exist based on models defined
+// use below object in sync function to drop and recreate tables
+// {force:true}
+sequelize.sync() 
 
 
 //Import routes
 const accounts = require("./routes/accounts");
-//const transactions = require("./routes/transactions");
+const transactions = require("./routes/transactions");
 
 
 //app middlewares
@@ -27,15 +29,14 @@ app.use(helmet());
 
 //app routes
 app.use("/accounts", accounts);
-//app.use("/api", transactions);
+app.use("/transactions", transactions);
 
-//
+//Send api not found for rest of the requests
 app.use(function (req, res, next) {
-  console.log("Request: ", req.body);
-  next();
+  res.status(404).send("API not found")
 });
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`Api is running on port ${PORT}`);
+  console.log(`Server Running on localhost:${PORT}`);
 });

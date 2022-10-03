@@ -1,3 +1,4 @@
+//Validate params and body for apis before passing to controller
 const { validationResult } = require("express-validator");
 
 exports.runValidation = (req, res, next) => {

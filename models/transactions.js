@@ -6,7 +6,7 @@ module.exports = function (sequelize, DataTypes) {
         Transaction_ID: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         Account_ID: { type: DataTypes.INTEGER },
         OperationType_ID: { type: DataTypes.INTEGER },
-        Amount: {type: DataTypes.INTEGER, defaultValue: 0},
+        Amount: {type: DataTypes.FLOAT, defaultValue: 0},
     },
     {
         timestamps: true,
