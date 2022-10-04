@@ -3,7 +3,7 @@ const { accounts } = require('../models');
 
 exports.getAccount = async (req, res) => {
     // Get account info stored in account table using account ID
-    return await accounts.findByPk(req.params.accounId,{attributes: [
+    return await accounts.findByPk(req.params.accountId,{attributes: [
         ['Account_ID','account_id'],
         ['Document_Number','document_number']
      ]})
