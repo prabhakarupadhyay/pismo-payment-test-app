@@ -1,10 +1,13 @@
 const express = require("express");
+const fs = require("fs")
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require('helmet');
 require("dotenv").config();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger_docs/api_docs.json');
 
 // Import the sequelize object on which we have defined model
 const sequelize = require('./models/connection');
@@ -15,6 +18,8 @@ const tables = require('./models/index');
 // {force:true}
 sequelize.sync() 
 
+// let express to use swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //Import routes
 const accounts = require("./routes/accounts");

@@ -1,0 +1,221 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "description": "Pismo APIS swagger documentation",
+        "version": "1.0.0",
+        "title": "Pismo API",
+        "contact": {
+            "email": "prabhakarupadhyay1997@gmail.com"
+        }
+    },
+    "servers":[{
+        "url": "http://localhost:8000"
+    }],
+    "components":{
+        "schemas":[]
+    },
+    "paths" : {
+        "/accounts/{accountId}" : {
+            "get" : {
+                "summary" : "Get account info by ids",
+                "description": "Get customer account info by account id from the account table. Successfull response will return account id and document number",
+                "produces": ["application/json"],
+                "parameters": [                            {
+                    "in": "path",
+                    "name": "accountId",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "description": "The account ID of the customer"
+                }],
+                "responses": {
+                    "201": {
+                        "description": "Get specified account",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties":{
+                                        "account_id":{
+                                            "type": "integer",
+                                            "default": 1
+                                        },
+                                        "document_number":{
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Account not present"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/accounts" : {
+            "post" : {
+                "summary" : "create account",
+                "description": "Create customer account by taking document number in the accounts table. The request will automatically create an account id",
+                "produces": ["application/json"],
+                "parameters": [],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "document_number":{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Create Account",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    
+                                        "type": "object",
+                                        "properties":{
+                                            "account_id":{
+                                                "type": "integer"
+                                            },
+                                            "document_number":{
+                                                "type": "string"
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error creating account"
+                    },
+                    "422": {
+                        "description": "Document number is required"
+                    }
+                }
+            }
+        },
+        "/transactions" : {
+            "get" : {
+                "summary" : "Get transactions for all accounts",
+                "description": "Get top 10 transactions for all customer accounts in the order of transaction date",
+                "produces": ["application/json"],
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": "Get top 10 transactions",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties":{
+                                        "Transaction_ID":{
+                                            "type": "integer"
+                                        },
+                                        "Account_ID":{
+                                            "type": "integer",
+                                            "default": 1
+                                        },
+                                        "OperationType_ID":{
+                                            "type": "integer"
+                                        },
+                                        "Amount":{
+                                            "type": "number"
+                                        },
+                                        "EventDate":{
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Transactions not present"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "post" : {
+                "summary" : "create transaction",
+                "description": "Create customer transaction by taking account, org type and amount in the transactions table. Each transaction is created per account",
+                "produces": ["application/json"],
+                "parameters": [],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties":{
+                                    "account_id":{
+                                        "type": "integer"
+                                    },
+                                    "operation_type_id":{
+                                        "type": "integer"
+                                    },
+                                    "amount":{
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Create transaction",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                        "type": "object",
+                                        "properties":{
+                                            "Transaction_ID":{
+                                                "type": "integer"
+                                            },
+                                            "Account_ID":{
+                                                "type": "integer"
+                                            },
+                                            "OperationType_ID":{
+                                                "type": "integer"
+                                            },
+                                            "Amount":{
+                                                "type": "number"
+                                            },
+                                            "EventDate":{
+                                                "type": "string"
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "amount is required above minimum value 1"
+                    },
+                    "502": {
+                        "description": "Account not present for transaction"
+                    },
+                    "500": {
+                        "description": "Unsuccessfull transaction, rolling back"
+                    }
+                }
+            }
+        }
+    }
+}

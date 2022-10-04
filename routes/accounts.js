@@ -17,6 +17,6 @@ const {
 
 //accounts apis
 router.post("/", accounts, runValidation, createAccount);
-router.get("/:accounId", getAccount);
+router.get("/:accountId", getAccount);
 
 module.exports = router;
