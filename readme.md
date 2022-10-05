@@ -4,7 +4,7 @@ Pismo Test Payment application. This App has 2 endpoints: `/accounts` and `/tran
 
 The *accounts* endpoint has `get` method to get account info based on account id and `post` method to create new account. 
 
-The *tansactions* endpoint has   `get` method to get top 10 transactions ordered by date and `post` method to create new transaction.
+The *tansactions* endpoint has `get` method to get top 10 transactions ordered by date and `post` method to create new transaction.
 
 ## Pre Configuration
 
@@ -55,7 +55,7 @@ $ npm start
 ```
 Server Running on `localhost:8000`
 
-## Test API and Endpoints
+## API and Endpoints
 
 `POST /accounts`
 ```json
@@ -77,6 +77,11 @@ Response Body:
 `GET /transactions`: Get top 10 transactions
 
 `POST /transactions`
+
+```
+valid operation_type_id values: 1,2,3,4
+```
+
 ```json
 Request Body:
 {
@@ -86,5 +91,17 @@ Request Body:
 }
 ```
 
+`GET /api-docs` : Access swagger doc UI
+
+## Pismo Functional Tests
+
+> To execute all unit test cases use **npm test** command
+
+> To execute specific unit test case, modify the **package.json** file ( replace "test": "./node_modules/.bin/mocha "tests/modules/*.js" --timeout 0 --recursive --reporter spec --sort" with "test": "./node_modules/.bin/mocha "tests/modules/<FILE_NAME>.js" --timeout 0 --recursive --reporter spec --sort") then use **npm test** command
+
+> To execute converage report use **npm run coverage** command
+
 ## Author
 PrabhakarUpadhyay
+
+

@@ -1,13 +1,13 @@
 const express = require("express");
 const fs = require("fs")
 const app = express();
-const morgan = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require('helmet');
 require("dotenv").config();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger_docs/api_docs.json');
+const PORT = process.env.PORT || 8000;
 
 // Import the sequelize object on which we have defined model
 const sequelize = require('./models/connection');
@@ -27,7 +27,6 @@ const transactions = require("./routes/transactions");
 
 
 //app middlewares
-app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
@@ -41,7 +40,8 @@ app.use(function (req, res, next) {
   res.status(404).send("API not found")
 });
 
-const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server Running on localhost:${PORT}`);
 });
+
+module.exports = app;
