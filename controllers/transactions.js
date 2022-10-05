@@ -13,7 +13,6 @@ exports.getTransactions = async (req, res) => {
         ]
     })
     .then(function (transactions) {
-        console.log(transactions)
         if (transactions) {
             res.status(201).json(transactions);
         } else if(transactions == null) {

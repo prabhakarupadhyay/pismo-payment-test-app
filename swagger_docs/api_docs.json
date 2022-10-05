@@ -166,7 +166,10 @@
                                         "type": "integer"
                                     },
                                     "operation_type_id":{
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 4,
+                                        "description":"value should be between 1 to 4"
                                     },
                                     "amount":{
                                         "type": "number"
@@ -191,7 +194,8 @@
                                                 "type": "integer"
                                             },
                                             "OperationType_ID":{
-                                                "type": "integer"
+                                                "type": "integer",
+                                                "default": 1
                                             },
                                             "Amount":{
                                                 "type": "number"
