@@ -30,7 +30,12 @@ exports.createTransaction = async (req, res) => {
             Account_ID: req.body.account_id,
             OperationType_ID: req.body.operation_type_id,
             Amount: req.body.amount
-          }, { transaction: t });
+          }, { transaction: t ,
+          hooks: true}).then((res=>{
+            console.log(res)
+            console.log("passed")
+         //   res.status(200).json(transaction)
+          }));
           // `transaction` is whatever was returned from the transaction callback (the `transaction`, in this case)
           res.status(200).json(transaction)
         });

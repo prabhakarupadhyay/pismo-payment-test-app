@@ -16,7 +16,7 @@ const tables = require('./models/index');
 // create tables if dont exist based on models defined
 // use below object in sync function to drop and recreate tables
 // {force:true}
-sequelize.sync() 
+sequelize.sync({force:true}) 
 
 // let express to use swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -45,3 +45,5 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+
+
