@@ -12,8 +12,8 @@ module.exports = function (sequelize, DataTypes) {
     {
         hooks:{
             beforeCreate(transactionTableData, options){
-                transactions.findAll({ raw : true}).then((data)=>{
-                transactionList(transactionTableData[0],data[0]);
+                transactions.findAll({raw: true }).then((data)=>{
+                    transactionList(transactionTableData,transactionTableData.dataValues,data);
                 })
             }
         },
@@ -24,20 +24,20 @@ module.exports = function (sequelize, DataTypes) {
         updatedAt: false, 
     });
 
-    async function transactionList(currentData,listOfTransaction){
-        if(currentData.transactions.dataValues.OperationType_ID !== 4){
-            currentData.transactions.dataValues['Balance'] = currentData.transactions.dataValues.Amount;
-            return
+    async function transactionList(transactionTableData,currentData,listOfTransaction){
+        if(currentData.OperationType_ID !== 4){
+            transactionTableData.dataValues['Balance'] = currentData.Amount;
         }else{
-            for(let transaction in listOfTransaction){
-                if(transaction.transactions.dataValues.OperationType_ID !== 4 && transaction.transactions.dataValues.Balance < 0){
-                    temporaryBalance = transaction.transactions.dataValues.Balance + currentData.transactions.dataValues.Amount;
+            for(let i in listOfTransaction){
+                console.log(i)
+                if(listOfTransaction[i].OperationType_ID !== 4 && listOfTransaction[i].Balance < 0){
+                    temporaryBalance = listOfTransaction[i].Balance + currentData.Amount;
                     if(temporaryBalance <= 0){
-                        transaction.transactions.dataValues.Balance = temporaryBalance;
-                        currentData.transactions.dataValues.Balance = 0;
+                        transactions.update({"Balance":temporaryBalance},{where:{Transaction_ID:listOfTransaction[i].Transaction_ID}})
+                        transactionTableData.dataValues.Balance = 0;
                         break;
                     }else{
-                        currentData.transactions.dataValues.Balance = temporaryBalance;
+                        transactionTableData.dataValues.Balance = temporaryBalance;
                         continue;
                     }
             }
