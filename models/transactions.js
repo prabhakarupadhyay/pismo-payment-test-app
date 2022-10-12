@@ -34,7 +34,12 @@ module.exports = function (sequelize, DataTypes) {
             let flag = true;
              for (let i in listOfTransaction){
                 if(listOfTransaction[i].Balance < 0){
-                    let temporaryBalance = listOfTransaction[i].Balance + currentData.Amount;
+                    let temporaryBalance;
+                    if(!currentData.Balance){
+                        temporaryBalance = listOfTransaction[i].Balance + currentData.Amount;
+                    }else{
+                        temporaryBalance = listOfTransaction[i].Balance + currentData.Balance;
+                    }
                     if(temporaryBalance <= 0){
                         flag = false;
                         await Transactions.update({"Balance":temporaryBalance},{where:{Transaction_ID:listOfTransaction[i].Transaction_ID}})
