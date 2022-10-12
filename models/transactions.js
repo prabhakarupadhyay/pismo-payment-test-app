@@ -2,7 +2,7 @@
 'use strict';
 
 module.exports = function (sequelize, DataTypes) {
-    const transactions = sequelize.define('transactions', {
+    const Transactions = sequelize.define('transactions', {
         Transaction_ID: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         Account_ID: { type: DataTypes.INTEGER },
         OperationType_ID: { type: DataTypes.INTEGER },
@@ -11,10 +11,12 @@ module.exports = function (sequelize, DataTypes) {
     },
     {
         hooks:{
-            beforeCreate(transactionTableData, options){
-                transactions.findAll({raw: true }).then((data)=>{
-                    transactionList(transactionTableData,transactionTableData.dataValues,data);
-                })
+            beforeCreate(transactions){
+                return new Promise((resolve, reject) => {
+                    Transactions.findAll({raw: true }).then((data)=>{
+                        transactionList(resolve,reject,transactions,data);
+                    })
+                });
             }
         },
         timestamps: true,
@@ -24,35 +26,47 @@ module.exports = function (sequelize, DataTypes) {
         updatedAt: false, 
     });
 
-    async function transactionList(transactionTableData,currentData,listOfTransaction){
+    async function transactionList(resolve,reject,currentData,listOfTransaction){
         if(currentData.OperationType_ID !== 4){
-            transactionTableData.dataValues['Balance'] = currentData.Amount;
+            currentData.Balance = currentData.Amount;
+            resolve(currentData)
         }else{
-            for(let i in listOfTransaction){
-                console.log(i)
-                if(listOfTransaction[i].OperationType_ID !== 4 && listOfTransaction[i].Balance < 0){
-                    temporaryBalance = listOfTransaction[i].Balance + currentData.Amount;
+            let flag = true;
+             for (let i in listOfTransaction){
+                if(listOfTransaction[i].Balance < 0){
+                    let temporaryBalance = listOfTransaction[i].Balance + currentData.Amount;
                     if(temporaryBalance <= 0){
-                        transactions.update({"Balance":temporaryBalance},{where:{Transaction_ID:listOfTransaction[i].Transaction_ID}})
-                        transactionTableData.dataValues.Balance = 0;
+                        flag = false;
+                        await Transactions.update({"Balance":temporaryBalance},{where:{Transaction_ID:listOfTransaction[i].Transaction_ID}})
+                        currentData.Balance = 0;
+                        resolve(currentData)
                         break;
                     }else{
-                        transactionTableData.dataValues.Balance = temporaryBalance;
+                        flag = false;
+                        await Transactions.update({"Balance":0},{where:{Transaction_ID:listOfTransaction[i].Transaction_ID}})
+                        currentData.Balance = temporaryBalance;
+                        if(i == listOfTransaction.length-1){
+                            resolve(currentData)
+                            break;
+                        }
                         continue;
                     }
             }
         }
-        
+        if(flag){
+            currentData.Balance = currentData.Amount;
+            resolve(currentData)
+        }
         }
     }
 
-    transactions.tableName = 'transactions';
-    transactions.associate = function (models) {
-        transactions.belongsTo(models.accounts, {
+    Transactions.tableName = 'transactions';
+    Transactions.associate = function (models) {
+        Transactions.belongsTo(models.accounts, {
             foreignKey: 'Account_ID'
         });
     };
-    return transactions;
+    return Transactions;
 };
 
 
