@@ -11,17 +11,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     {
         hooks:{
-            beforeCreate(transactions){
-                transactions.findbyPk({
-                    where:{
-                        Account_ID:1
-                    }
-                }).then((data)=>{
-                    console.log(data)
-                  //  return;
-                  //  transactionList(data);
-                }).catch((e)=>{
-                    console.log(e)
+            beforeCreate(transactionTableData, options){
+                transactions.findAll({ raw : true}).then((data)=>{
+                transactionList(transactionTableData[0],data[0]);
                 })
             }
         },
@@ -32,28 +24,25 @@ module.exports = function (sequelize, DataTypes) {
         updatedAt: false, 
     });
 
-    async function transactionList(listOfTransaction){
-        console.log("triggered")
-        //get current balance
-        let attributes  = listOfTransaction.attributes
-        if(Object.keys(attributes).length == 0){
-          //  return
+    async function transactionList(currentData,listOfTransaction){
+        if(currentData.transactions.dataValues.OperationType_ID !== 4){
+            currentData.transactions.dataValues['Balance'] = currentData.transactions.dataValues.Amount;
+            return
         }else{
-                for(let i in attributes){
-                    if(attributes.OperationType_ID == 4){
-                    if(attributes[i].Balance < 0){
-                        let tempBalance = attributes[i].Balance
-                        attributes[i].Balance += currentBal;
-                        currentBal += tempBalance
-                        if(currentBal <=0){
-                            break;
-                        }else{
-                            continue;
-                        }
+            for(let transaction in listOfTransaction){
+                if(transaction.transactions.dataValues.OperationType_ID !== 4 && transaction.transactions.dataValues.Balance < 0){
+                    temporaryBalance = transaction.transactions.dataValues.Balance + currentData.transactions.dataValues.Amount;
+                    if(temporaryBalance <= 0){
+                        transaction.transactions.dataValues.Balance = temporaryBalance;
+                        currentData.transactions.dataValues.Balance = 0;
+                        break;
+                    }else{
+                        currentData.transactions.dataValues.Balance = temporaryBalance;
+                        continue;
                     }
-                }
             }
-            return;
+        }
+        
         }
     }
 
