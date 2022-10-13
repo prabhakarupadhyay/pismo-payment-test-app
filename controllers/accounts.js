@@ -30,3 +30,5 @@ exports.createAccount = async (req, res) => {
         }
     });
 };
+
+//accounts.update({data,{where:{id:post.id}hooks: true}}), 
